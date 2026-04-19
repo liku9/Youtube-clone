@@ -1,111 +1,129 @@
+@import "tailwindcss";
+
+@theme {
+  /* ... previous color/breakpoint definitions ... */
+
+  /* Custom Animations */
+  --animate-slide-in: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  --animate-live-pulse: livePulse 2s ease-in-out infinite;
+  --animate-fade-in: fadeIn 0.3s ease-out;
+  --animate-slide-up: slideUp 0.6s ease-out forwards;
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(0.92); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Base Styles & Custom Utilities */
+@layer base {
+  /* Use theme variables for the scrollbar so it reacts to dark mode */
+  .scrollbar-yt::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scrollbar-yt::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-yt::-webkit-scrollbar-thumb {
+    background: var(--yt-border);
+    border-radius: 10px;
+  }
+  .scrollbar-yt::-webkit-scrollbar-thumb:hover {
+    background: var(--yt-muted);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* Ensure smooth color transitions for the whole app */
+  html, body {
+    @apply transition-colors duration-300;
+  }
+}
+@theme {
+  @keyframes shrinkWidth {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+  /* Breakpoints */
+  --breakpoint-xxs: 300px;
+  --breakpoint-xs: 420px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* Semantic Colors - These generate classes like bg-yt-bg, text-yt-primary, etc. */
+  --color-yt-primary: var(--yt-primary);
+  --color-yt-bg: var(--yt-bg);
+  --color-yt-surface: var(--yt-surface);
+  --color-yt-text: var(--yt-text);
+  --color-yt-muted: var(--yt-muted);
+  --color-yt-border: var(--yt-border);
+
+  /* Toast Type Colors */
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-milestone: var(--milestone);
+  --color-trending: var(--trending);
+  --color-like: var(--like);
+  --color-notification: var(--notification);
+}
+
+/* Light theme colors (Source of Truth) */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --yt-primary: #FF0000;
+  --yt-bg: #ffffff;
+  --yt-surface: #f2f2f2;
+  --yt-text: #0f0f0f;
+  --yt-muted: #606060;
+  --yt-border: #d0d0d0;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Toast Base Colors */
+  --success: #22c55e;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --milestone: #a855f7;
+  --trending: #f97316;
+  --like: #ec4899;
+  --notification: #6366f1;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* Aliases for components using var(--color-dark-*) */
+  --color-dark-bg: var(--yt-bg);
+  --color-dark-surface: var(--yt-surface);
+  --color-dark-border: var(--yt-border);
+  --color-dark-text: var(--yt-text);
+  --color-dark-muted: var(--yt-muted);
+  --color-dark-primary: var(--yt-primary);
+  --color-dark-accent: #3ea6ff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-body {
-  margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* Dark theme colors (Swapped when .dark class is present) */
+.dark {
+  --yt-bg: #0f0f0f;
+  --yt-surface: #181818;
+  --yt-text: #ffffff;
+  --yt-muted: #aaaaaa;
+  --yt-border: #303030;
 }

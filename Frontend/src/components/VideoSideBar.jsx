@@ -1,0 +1,58 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+
+const VideoSideBar = () => {
+  const { id } = useParams();
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    const fetchPageData = () => {
+      try {
+        const cachedVideos = localStorage.getItem("yt_videos_cache");
+        if (cachedVideos) {
+          console.log(JSON.parse(cachedVideos));
+          setVideos(JSON.parse(cachedVideos));
+        }
+      } catch (error) {
+        console.error("Error loading page data", error);
+      }
+    };
+    fetchPageData();
+  }, [id]);
+
+  return (
+    <div className="flex flex-col gap-2 sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto scrollbar-yt pr-2">
+      {videos.slice(0, 15).map((rec) => (
+        <Link 
+          to={`/watch/${rec._id}`} 
+          key={rec._id} 
+          className="flex gap-2 group p-1 rounded-lg hover:bg-yt-surface transition-colors"
+        >
+          {/* Thumbnail */}
+          <div className="relative w-40 h-24 flex-shrink-0">
+            <img 
+              src={rec.thumbnailUrl} 
+              alt={rec.title}
+              className="w-full h-full object-cover rounded-lg" 
+            />
+          </div>
+          
+          {/* Video Info */}
+          <div className="flex flex-col gap-1 overflow-hidden flex-1">
+            <h4 className="text-sm font-bold text-yt-text line-clamp-2 leading-tight group-hover:text-yt-text">
+              {rec.title}
+            </h4>
+            <p className="text-xs text-yt-muted hover:text-yt-text truncate">
+              {rec.channel?.channelName}
+            </p>
+            <div className="text-xs text-yt-muted">
+              {rec.views?.toLocaleString() || 0} views • 1 day ago
+            </div>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+};
+
+export default VideoSideBar;
